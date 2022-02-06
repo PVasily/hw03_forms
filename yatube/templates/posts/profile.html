@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} Профайл пользователя {% include 'includes/name_or_fullname.html' %}
+{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <h1>Все посты пользователя {% include 'includes/name_or_fullname.html' %}</h1>
+    <p>Всего постов {{ count }}</p>
+    <article>
+      {% for post in page_obj %}
+        {% include 'includes/card_author.html' %}
+    <a href={% url 'posts:post_detail' post.id %}>подробная информация</a>
+    </article>
+    <br>
+    {% if post.group.slug %}
+    <a href={% url 'posts:group_list' post.group.slug %}>все записи группы</a>
+    {% endif %}
+    {% endfor %}
+    {% include 'includes/paginator.html' %}
+  </div>
+{% endblock %}
