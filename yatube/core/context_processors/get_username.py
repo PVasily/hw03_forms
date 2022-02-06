@@ -3,4 +3,3 @@ def get_username(request):
     return {
         'name': name
     }
-    

@@ -7,5 +7,4 @@ def authorized_only(func):
         if request.user.is_authenticated:
             return func(request, *args, **kwargs)
         return redirect('/auth/login/')
-    
     return check_user

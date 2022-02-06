@@ -11,6 +11,7 @@ class SugnUp(CreateView):
     success_url = reverse_lazy('posts:index')
     template_name = 'users/signup.html'
 
+
 def send_msg(email, name, title, artist, genre, price, comment):
     subject = f"Обмен {artist}-{title}"
     body = f"""Предложение на обмен диска от {name} ({email})
@@ -33,7 +34,7 @@ def mail_page(request):
         if form.is_valid():
             send_msg(**form.cleaned_data)
             return redirect('users:thankyou')
-        return render(request, 'users/send_mail.html', {'form': form})     
+        return render(request, 'users/send_mail.html', {'form': form})
     else:
         form = ExchangeForm()
         return render(request, 'users/send_mail.html', {'form': form})
