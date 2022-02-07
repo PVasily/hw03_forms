@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from posts.forms import PostForm
-
 from .models import Post, Group, User
 
 
@@ -46,7 +45,7 @@ def group_post(request, slug):
 
 def profile(request, username):
     user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user)
+    posts = user.posts.order_by('-pub_date')
     count = posts.count()
     page_obj = get_paginator(request, posts, POSTS_PER_PAGE)
     context = {
@@ -76,12 +75,12 @@ def post_detail(request, post_id):
 def post_create(request):
     username = request.user.username
     user_id = request.user.id
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = Post(**form.cleaned_data, author_id=user_id)
-            post.save()
-            return redirect('posts:profile', username=username)
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        post = form.save(commit=False)
+        post = Post(**form.cleaned_data, author_id=user_id)
+        post.save()
+        return redirect('posts:profile', username=username)
     form = PostForm()
     return render(request, 'posts/create_post.html', {'form': form})
 
@@ -89,11 +88,11 @@ def post_create(request):
 @login_required
 def post_edit(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    if request.user == post.author:
-        form = PostForm(request.POST or None, instance=post)
-        if form.is_valid():
-            post = form.save()
-            return redirect('posts:post_detail', post_id=post_id)
-        return render(request, 'posts/create_post.html',
-                      {'form': form, 'post_id': post_id, 'is_edit': True})
-    return redirect('posts:post_detail', post_id=post_id)
+    if request.user != post.author:
+        return redirect('posts:post_detail', post_id=post_id)
+    form = PostForm(request.POST or None, instance=post)
+    if form.is_valid():
+        form.save()
+        return redirect('posts:post_detail', post_id=post_id)
+    return render(request, 'posts/create_post.html',
+                  {'form': form, 'post_id': post_id, 'is_edit': True})
