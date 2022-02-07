@@ -22,7 +22,7 @@
           <a class="nav-link {% if view_name  == 'users:logout' %}active disabled{% endif %}" href={% url 'users:logout' %}>Выйти</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if view_name  == 'users:pcf' %}active disabled{% endif %}" href={% url 'users:pcf' %}>Изменить пароль</a>
+          <a class="nav-link {% if view_name  == 'users:password_change_form' %}active disabled{% endif %}" href={% url 'users:password_change_form' %}>Изменить пароль</a>
         </li>
         {% endif %}
         {% if not name %}
@@ -40,18 +40,6 @@
         {% endif %}
         <li>
           {% endwith %} 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Дополнительно
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {% if name %}
-              <a class="dropdown-item" href={% url 'users:send_mail' %}>Отправить письмо</a>
-              {% endif %}
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Что-то еще</a>
-            </div>
-          </li>
         </li>
       </ul>
     </div>
