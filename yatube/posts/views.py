@@ -77,7 +77,6 @@ def post_create(request):
     form = PostForm(request.POST or None)
     if form.is_valid():
         post = form.save(commit=False)
-        post = Post(**form.cleaned_data)
         post.author = user
         post.save()
         return redirect('posts:profile', username=user.username)
